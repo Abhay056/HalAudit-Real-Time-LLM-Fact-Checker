@@ -8,17 +8,7 @@ A production-grade pipeline that sits between any LLM and the user to automatica
 
 ## 🏗️ Architecture
 
-```
-┌─────────────┐     ┌──────────────────┐     ┌─────────────────┐     ┌──────────────┐
-│  LLM Output  │────▶│  Claim Extractor  │────▶│  RAG Retriever  │────▶│  NLI Scorer   │
-│  (any text)  │     │  (OpenAI/fallback)│     │  (ChromaDB)     │     │  (DeBERTa)    │
-└─────────────┘     └──────────────────┘     └─────────────────┘     └──────┬───────┘
-                                                                             │
-                    ┌──────────────────┐     ┌─────────────────┐            │
-                    │  Dashboard (UI)   │◀────│  Audit Report    │◀───────────┘
-                    │  Color-coded      │     │  Trust Score     │
-                    └──────────────────┘     └─────────────────┘
-```
+![Architecture Diagram](Architecture_HalAudit.png)
 
 ## ⚡ Tech Stack
 
