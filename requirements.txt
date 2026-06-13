@@ -1,0 +1,33 @@
+# HalAudit - Real-Time LLM Fact-Checker Pipeline
+# Core Framework
+fastapi>=0.115.0,<0.116.0
+uvicorn[standard]>=0.34.0
+python-dotenv>=1.0.0
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+httpx>=0.27.0
+
+# LLM - Claim Extraction
+openai>=1.60.0
+
+# Embeddings & Vector Store
+sentence-transformers>=3.3.0
+chromadb>=1.0.0
+
+# NLI Model
+transformers>=4.45.0
+torch>=2.5.0
+
+# Async Queue
+redis>=5.0.0
+arq>=0.26.0
+
+# Database
+aiosqlite>=0.20.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.24.0
+
+# Benchmarking
+tabulate>=0.9.0

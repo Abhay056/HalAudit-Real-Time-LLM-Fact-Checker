@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: halaudit-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  api:
+    build: .
+    container_name: halaudit-api
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - CHROMA_PERSIST_DIR=/app/chroma_data
+      - AUDIT_DB_PATH=/app/audit_logs.db
+    env_file:
+      - .env
+    volumes:
+      - chroma_data:/app/chroma_data
+      - audit_data:/app/audit_logs.db
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  worker:
+    build: .
+    container_name: halaudit-worker
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - CHROMA_PERSIST_DIR=/app/chroma_data
+      - AUDIT_DB_PATH=/app/audit_logs.db
+    env_file:
+      - .env
+    volumes:
+      - chroma_data:/app/chroma_data
+      - audit_data:/app/audit_logs.db
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: arq app.queue.worker.WorkerSettings
+
+volumes:
+  redis_data:
+  chroma_data:
+  audit_data:
